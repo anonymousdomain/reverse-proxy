@@ -28,13 +28,11 @@ provider "aws" {
 
 resource "aws_instance" "nginx_server" {
 
-#   ami = "ami-01e82af4e524a0aa3"
   ami = "ami-07bff6261f14c3a45"
 
   instance_type = "t2.micro"
 
-  vpc_security_group_ids = [aws_security_group.nginx_server_rule.id]
-#   subnet_id = "subnet-09399a9d804de1bef"
+  vpc_security_group_ids = [module.nginx_server_security_group.security_group_id]
 
   tags = {
     Name = var.instance_name
@@ -42,22 +40,19 @@ resource "aws_instance" "nginx_server" {
   key_name = "nginx-server.pem"
 
 }
-
-resource "aws_security_group" "nginx_server_rule" {
-    name = "nginx_server_rule-sg"
-    ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-    egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+data "aws_vpc" "default" {
+  default = true
 }
 
-
+module "nginx_server_security_group" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "5.1.2"
+     name = "nginx_server-sg"
+     
+  vpc_id  = data.aws_vpc.default.id  
+  ingress_rules = ["https-443-tcp","http-80-tcp","ssh-tcp"]
+  ingress_cidr_blocks = ["0.0.0.0/0"]
+  egress_rules = ["all-all"]
+  egress_cidr_blocks = ["0.0.0.0/0"]
+}
 
