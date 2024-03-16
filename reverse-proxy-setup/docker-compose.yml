@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+ webserver-1:
+  image: nginx
+  volumes:
+    - $PWD/server1:/usr/share/nginx/html
+  networks:
+   - connect
+ webserver-2:
+  image: nginx
+  volumes:
+    - $PWD/server2:/usr/share/nginx/html
+  networks:
+   - connect
+ webserver-3:
+  image: nginx
+  volumes:
+    - $PWD/server3:/usr/share/nginx/html
+  networks:
+   - connect
+  
+ reverse-proxy:
+  image: nginx
+  ports:
+    - 8080:80
+  volumes:
+    - $PWD/conf:/etc/nginx/conf.d
+  networks:
+   - connect
+  
+
+networks:
+  connect:
+    driver: bridge
+
