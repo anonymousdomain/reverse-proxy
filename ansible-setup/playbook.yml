@@ -65,6 +65,25 @@
         name: nginx
         source: pull
 
+- name: Clone GitHub repository
+  hosts: ec2-server
+  become: yes
+  tasks:
+    - name: Install git
+      dnf:
+        name: git
+        state: present
+
+    - name: Create Directory
+      file:
+        path: /home/ec2-user/codes/
+        state: directory
+        mode: +x
+    - name: Clone repository
+      git:
+        repo: 'https://github.com/anonymousdomain/reverse-proxy.git'
+        dest: '/home/ec2-user/codes'
+
 
 
  

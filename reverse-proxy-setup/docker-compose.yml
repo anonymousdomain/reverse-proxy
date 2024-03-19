@@ -25,7 +25,8 @@ services:
   ports:
     - 8080:80
   volumes:
-    - $PWD/conf:/etc/nginx/conf.d
+    - $PWD/reverseproxy/conf:/etc/nginx/conf.d
+    - $PWD/reverseproxy/server:/usr/share/nginx/html
   networks:
    - connect
   
