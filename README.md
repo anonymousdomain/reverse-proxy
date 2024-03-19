@@ -54,7 +54,7 @@ server {
 ```
 ### ochestrate the servers in a dockerized enviroment 
 
-for the sake of simplicity you can use simple html tags for each server  and mount it as a volume 
+for the sake of simplicity you can use simple html template for each server  and mount it as a volume 
 then spin up the docker compose 
 ``` docker compose 
 docker-compose up -d
