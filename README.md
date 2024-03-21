@@ -63,10 +63,10 @@ docker-compose up -d
 finally you can access each servers through reverse proxy  server  as 
 
 ``` curl 
-https://ec2-34-217-78-248.us-west-2.compute.amazonaws.com/app1
+http://ec2-34-217-78-248.us-west-2.compute.amazonaws.com/app1
 
 http://ec2-34-217-78-248.us-west-2.compute.amazonaws.com/app2
 
-https://ec2-34-217-78-248.us-west-2.compute.amazonaws.com/app3
+http://ec2-34-217-78-248.us-west-2.compute.amazonaws.com/app3
 
 ```
