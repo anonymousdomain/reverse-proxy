@@ -30,7 +30,7 @@ This section demonstrates how to set up an Nginx reverse proxy using Terraform t
 #### confgure nginx as a proxy server 
 ``` nginx
 server {
-	server_name localhost;
+	server_name ec2-34-217-78-248.us-west-2.compute.amazonaws.com;
 
 	listen 80;
    
