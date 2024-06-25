@@ -1,7 +1,13 @@
 ---
-- name: Install docker
+
+- name: Setup EC2 Server For Reverse Proxy 
   hosts: ec2-server
-  become: yes
+  become: yes 
+  vars:
+    docker_compose_version: 1.27.4
+    github_repo: 'https://github.com/anonymousdomain/reverse-proxy.git'
+    target_directory: '/home/ec2-user/codes'
+
   tasks:
     - name: Install docker
       dnf:
@@ -9,66 +15,41 @@
         state: present
         update_cache: yes
 
-- name: Install Docker-Compose
-  hosts: ec2-server
-  become: yes
-  tasks:
     - name: Install Docker-Compose
       get_url:
         url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-{{lookup('pipe', 'uname -m')}}
         dest: /usr/local/bin/docker-compose
         mode: +x 
 
-- name: Install Docker-Compose
-  hosts: ec2-server
-  become: yes
-  tasks:
-    - name: docker daemon
+    - name: start docker daemon
       systemd:
         name: docker
         state: started
+        enabled: yes
 
-- name: add ec2-user to docker group
-  hosts: ec2-server
-  become: yes
-  tasks:
     - name: add ec2-user to docker group
       user:
         name: ec2-user
         groups: docker
         append: yes
+
     - name: Reconnect to server session
       meta: reset_connection
 
-- name: Install pip3
-  hosts: ec2-server
-  become: yes
-  tasks:
     - name: Install pip3
       dnf:
         name: python3-pip
         state: present
 
-- name: Install Docker-Compose
-  hosts: ec2-server
-  become: yes
-  tasks:
     - name: install docker python module
       pip:
         name: docker-py
 
-- name: pull nginx
-  hosts: ec2-server
-  tasks:
     - name: pull nginx
       docker_image:
         name: nginx
         source: pull
 
-- name: Clone GitHub repository
-  hosts: ec2-server
-  become: yes
-  tasks:
     - name: Install git
       dnf:
         name: git
@@ -76,14 +57,12 @@
 
     - name: Create Directory
       file:
-        path: /home/ec2-user/codes/
+        path: "{{ target_directory }}"
         state: directory
         mode: +x
     - name: Clone repository
       git:
-        repo: 'https://github.com/anonymousdomain/reverse-proxy.git'
-        dest: '/home/ec2-user/codes'
-
-
+        repo: "{{ github_repo }}"
+        dest: "{{ target_directory }}"
 
  
